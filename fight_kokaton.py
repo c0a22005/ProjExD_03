@@ -157,14 +157,14 @@ class Beam:
         
 class Score:
     def __init__(self):
-        self.font=pg.font.SysFont("hgp創英角ﾎﾟｯﾌﾟ体", 30)
-        self.color=(0,0,255)
+        self.font=pg.font.SysFont("hgp創英角ﾎﾟｯﾌﾟ体", 30) #フォント設定
+        self.color=(0,0,255)#色設定
         self.scr=0
         self.img=self.font.render(f"SCORE:{self.scr}", 0, self.color)
         self.img_rct=self.img.get_rect()
         self.img_plc=100,850
 
-    def update(self,screen):
+    def update(self,screen):#更新
         self.img=self.font.render(f"SCORE:{self.scr}", 0, self.color)
         screen.blit(self.img, self.img_plc)
         
