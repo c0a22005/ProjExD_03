@@ -3,6 +3,7 @@ import random
 import sys
 import time
 
+
 import pygame as pg
 
 
@@ -23,6 +24,7 @@ def check_bound(obj_rct: pg.Rect) -> tuple[bool, bool]:
     if obj_rct.top < 0 or HEIGHT < obj_rct.bottom:
         tate = False
     return yoko, tate
+
 
 
 class Bird:
@@ -77,6 +79,7 @@ class Bird:
         """
         self.img = pg.transform.rotozoom(pg.image.load(f"{MAIN_DIR}/fig/{num}.png"), 0, 2.0)
         screen.blit(self.img, self.rct)
+        
 
     def update(self, key_lst: list[bool], screen: pg.Surface):
         """
@@ -96,6 +99,7 @@ class Bird:
         if not (sum_mv[0] == 0 and sum_mv[1] == 0):  # なにもキーが押されていなくなかったら
             self.img = self.imgs[tuple(sum_mv)] 
         screen.blit(self.img, self.rct)
+        self.dere = sum_mv
 
 
 class Bomb:
@@ -150,6 +154,21 @@ class Beam:
         """
         self.rct.move_ip(self.vx, self.vy)
         screen.blit(self.img, self.rct)
+        
+class Score:
+    def __init__(self):
+        self.font=pg.font.SysFont("hgp創英角ﾎﾟｯﾌﾟ体", 30)
+        self.color=(0,0,255)
+        self.scr=0
+        self.img=self.font.render(f"SCORE:{self.scr}", 0, self.color)
+        self.img_rct=self.img.get_rect()
+        self.img_plc=100,850
+
+    def update(self,screen):
+        self.img=self.font.render(f"SCORE:{self.scr}", 0, self.color)
+        screen.blit(self.img, self.img_plc)
+        
+
 
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
@@ -159,6 +178,7 @@ def main():
     bombs = [Bomb() for _ in range(NUM_OF_BOMBS)]  
     
     beam = None
+    score = Score()
     
     clock = pg.time.Clock()
     tmr = 0
@@ -182,9 +202,12 @@ def main():
 
         for i, bomb in enumerate(bombs):
             if beam is not None and beam.rct.colliderect(bomb.rct):
+                
                 beam = None
+                           
                 bombs[i] = None
                 bird.change_img(6, screen)
+                score.scr += 1
                 
         # Noneでない爆弾だけのリストを作る
         bombs = [bomb for bomb in bombs if bomb is not None]
@@ -195,7 +218,7 @@ def main():
             bomb.update(screen)
         if beam is not None:
             beam.update(screen)
-            
+        score.update(screen)
             
         
         pg.display.update()
